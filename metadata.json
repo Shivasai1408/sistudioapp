@@ -1,0 +1,7 @@
+{
+  "name": "Skills",
+  "description": "Personal skill tracker and mastery manager to build competencies, log practice hours, and conquer milestones.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
