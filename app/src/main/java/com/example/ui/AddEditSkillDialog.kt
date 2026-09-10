@@ -1,5 +1,6 @@
 package com.example.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,13 +20,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Flare
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -52,10 +52,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -63,6 +63,17 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.data.SkillEntity
 import com.example.model.SkillCategories
 import com.example.model.SkillTemplates
+import com.example.ui.theme.AppleGray100
+import com.example.ui.theme.AppleGray200
+import com.example.ui.theme.AppleGray300
+import com.example.ui.theme.AppleGray400
+import com.example.ui.theme.AppleGray500
+import com.example.ui.theme.AppleGray600
+import com.example.ui.theme.AppleGray700
+import com.example.ui.theme.AppleGrayWhite
+import com.example.ui.theme.AppleRed
+import com.example.ui.theme.AppleRedDark
+import com.example.ui.theme.AppleRedVibrant
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -83,7 +94,7 @@ fun AddEditSkillDialog(
     var category by remember { mutableStateOf(editingSkill?.category ?: "Tech & Code") }
     var description by remember { mutableStateOf(editingSkill?.description ?: "") }
     var targetHours by remember { mutableIntStateOf(editingSkill?.targetHours ?: 50) }
-    var colorHex by remember { mutableStateOf(editingSkill?.colorHex ?: "#4F46E5") }
+    var colorHex by remember { mutableStateOf(editingSkill?.colorHex ?: "#FF2D55") }
     var iconKey by remember { mutableStateOf(editingSkill?.iconKey ?: "code") }
     val milestones = remember { mutableStateListOf<String>() }
     var newMilestoneInput by remember { mutableStateOf("") }
@@ -96,19 +107,22 @@ fun AddEditSkillDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        Card(
+        Box(
             modifier = Modifier
                 .fillMaxWidth(0.95f)
                 .heightIn(max = 680.dp)
                 .padding(vertical = 16.dp)
-                .testTag("add_edit_skill_dialog"),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                .liquidGlassSurface(
+                    shape = RoundedCornerShape(26.dp),
+                    baseColor = Color(0xF215161E),
+                    borderColor = Color(0x35FFFFFF)
+                )
+                .testTag("add_edit_skill_dialog")
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp)
+                    .padding(22.dp)
             ) {
                 // Dialog Header
                 Row(
@@ -119,19 +133,39 @@ fun AddEditSkillDialog(
                     Column {
                         Text(
                             text = if (isEditing) "Edit Skill" else "Create New Skill",
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = AppleGrayWhite,
+                                letterSpacing = (-0.3).sp
+                            )
                         )
                         Text(
                             text = if (isEditing) "Update parameters and goals" else "Set up roadmap and track your mastery",
-                            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = AppleGray400,
+                                fontSize = 12.sp
+                            )
                         )
                     }
-                    IconButton(onClick = onDismiss, modifier = Modifier.testTag("close_skill_dialog_button")) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clip(CircleShape)
+                            .background(Color(0x33282A35))
+                            .border(1.dp, Color(0x20FFFFFF), CircleShape)
+                            .testTag("close_skill_dialog_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = AppleGray200,
+                            modifier = Modifier.size(17.dp)
+                        )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 // Scrollable Content
                 Column(
@@ -145,7 +179,8 @@ fun AddEditSkillDialog(
                             text = "Or start from a preset template:",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = AppleRed,
+                                letterSpacing = 0.5.sp
                             )
                         )
                         Spacer(modifier = Modifier.height(6.dp))
@@ -155,10 +190,9 @@ fun AddEditSkillDialog(
                             verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             SkillTemplates.TEMPLATES.forEach { template ->
-                                Surface(
+                                Box(
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .clickable {
+                                        .appleSpringClick(onClick = {
                                             name = template.name
                                             category = template.category
                                             description = template.description
@@ -167,24 +201,27 @@ fun AddEditSkillDialog(
                                             iconKey = template.iconKey
                                             milestones.clear()
                                             milestones.addAll(template.defaultMilestones)
-                                        },
-                                    shape = RoundedCornerShape(10.dp),
-                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                                        })
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(Color(0x33282A36))
+                                        .border(1.dp, Color(0x20FFFFFF), RoundedCornerShape(12.dp))
+                                        .padding(horizontal = 10.dp, vertical = 6.dp)
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(
                                             imageVector = Icons.Default.Flare,
                                             contentDescription = null,
                                             modifier = Modifier.size(12.dp),
                                             tint = SkillCategories.parseColor(template.colorHex)
                                         )
-                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Spacer(modifier = Modifier.width(5.dp))
                                         Text(
                                             text = template.name,
-                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium)
+                                            style = MaterialTheme.typography.labelSmall.copy(
+                                                fontWeight = FontWeight.Medium,
+                                                color = AppleGray200,
+                                                fontSize = 11.5.sp
+                                            )
                                         )
                                     }
                                 }
@@ -197,13 +234,22 @@ fun AddEditSkillDialog(
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        label = { Text("Skill Name *") },
-                        placeholder = { Text("e.g. Kotlin & Compose, Guitar, Spanish") },
+                        label = { Text("Skill Name *", color = AppleGray400) },
+                        placeholder = { Text("e.g. Kotlin & Compose, Guitar, Spanish", color = AppleGray500) },
                         singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("skill_name_input"),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(14.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = Color(0x441A1B24),
+                            unfocusedContainerColor = Color(0x3316171F),
+                            focusedTextColor = AppleGrayWhite,
+                            unfocusedTextColor = AppleGrayWhite,
+                            focusedBorderColor = AppleRed.copy(alpha = 0.6f),
+                            unfocusedBorderColor = Color(0x22FFFFFF),
+                            cursorColor = AppleRed
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -217,26 +263,44 @@ fun AddEditSkillDialog(
                             value = category,
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Category") },
+                            label = { Text("Category", color = AppleGray400) },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryDropdownExpanded) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .menuAnchor()
                                 .testTag("category_dropdown"),
-                            shape = RoundedCornerShape(12.dp)
+                            shape = RoundedCornerShape(14.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = Color(0x441A1B24),
+                                unfocusedContainerColor = Color(0x3316171F),
+                                focusedTextColor = AppleGrayWhite,
+                                unfocusedTextColor = AppleGrayWhite,
+                                focusedBorderColor = AppleRed.copy(alpha = 0.6f),
+                                unfocusedBorderColor = Color(0x22FFFFFF)
+                            )
                         )
                         ExposedDropdownMenu(
                             expanded = categoryDropdownExpanded,
-                            onDismissRequest = { categoryDropdownExpanded = false }
+                            onDismissRequest = { categoryDropdownExpanded = false },
+                            modifier = Modifier
+                                .background(Color(0xF0181920))
+                                .border(1.dp, Color(0x30FFFFFF), RoundedCornerShape(12.dp))
                         ) {
                             SkillCategories.DEFINITIONS.forEach { cat ->
                                 DropdownMenuItem(
-                                    text = { Text(cat.name) },
+                                    text = {
+                                        Text(
+                                            cat.name,
+                                            color = if (category == cat.name) AppleRed else AppleGray100,
+                                            fontWeight = if (category == cat.name) FontWeight.Bold else FontWeight.Normal
+                                        )
+                                    },
                                     leadingIcon = {
                                         Icon(
                                             imageVector = SkillCategories.getIcon(cat.iconKey),
                                             contentDescription = null,
-                                            tint = SkillCategories.parseColor(cat.defaultColor)
+                                            tint = SkillCategories.parseColor(cat.defaultColor),
+                                            modifier = Modifier.size(18.dp)
                                         )
                                     },
                                     onClick = {
@@ -258,13 +322,22 @@ fun AddEditSkillDialog(
                     OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
-                        label = { Text("Description / Goal") },
-                        placeholder = { Text("What motivates you to master this skill?") },
+                        label = { Text("Description / Goal", color = AppleGray400) },
+                        placeholder = { Text("What motivates you to master this skill?", color = AppleGray500) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("skill_description_input"),
-                        shape = RoundedCornerShape(12.dp),
-                        maxLines = 3
+                        shape = RoundedCornerShape(14.dp),
+                        maxLines = 3,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = Color(0x441A1B24),
+                            unfocusedContainerColor = Color(0x3316171F),
+                            focusedTextColor = AppleGrayWhite,
+                            unfocusedTextColor = AppleGrayWhite,
+                            focusedBorderColor = AppleRed.copy(alpha = 0.6f),
+                            unfocusedBorderColor = Color(0x22FFFFFF),
+                            cursorColor = AppleRed
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
@@ -277,7 +350,10 @@ fun AddEditSkillDialog(
                     ) {
                         Text(
                             text = "Target Hours: $targetHours hrs",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = AppleGrayWhite
+                            )
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
@@ -287,26 +363,29 @@ fun AddEditSkillDialog(
                     ) {
                         listOf(25, 50, 100, 200).forEach { hours ->
                             val isSelected = targetHours == hours
-                            Surface(
+                            Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable { targetHours = hours },
-                                shape = RoundedCornerShape(10.dp),
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-                            ) {
-                                Box(
-                                    modifier = Modifier.padding(vertical = 8.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "${hours}h",
-                                        style = MaterialTheme.typography.labelMedium.copy(
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
+                                    .appleSpringClick(onClick = { targetHours = hours })
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(
+                                        if (isSelected) AppleRed else Color(0x33282A36)
                                     )
-                                }
+                                    .border(
+                                        1.dp,
+                                        if (isSelected) Color(0x60FFFFFF) else Color(0x20FFFFFF),
+                                        RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(vertical = 9.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "${hours}h",
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (isSelected) AppleGrayWhite else AppleGray300
+                                    )
+                                )
                             }
                         }
                     }
@@ -316,9 +395,12 @@ fun AddEditSkillDialog(
                     // Color Palette Picker
                     Text(
                         text = "Accent Color",
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = AppleGrayWhite
+                        )
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -332,8 +414,8 @@ fun AddEditSkillDialog(
                                     .clip(CircleShape)
                                     .background(color)
                                     .border(
-                                        width = if (isSelected) 3.dp else 1.dp,
-                                        color = if (isSelected) MaterialTheme.colorScheme.onSurface else Color.Transparent,
+                                        width = if (isSelected) 2.5.dp else 1.dp,
+                                        color = if (isSelected) Color.White else Color(0x40FFFFFF),
                                         shape = CircleShape
                                     )
                                     .clickable { colorHex = hex },
@@ -356,9 +438,12 @@ fun AddEditSkillDialog(
                     // Icon Picker
                     Text(
                         text = "Skill Icon",
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = AppleGrayWhite
+                        )
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -366,33 +451,40 @@ fun AddEditSkillDialog(
                     ) {
                         availableIcons.forEach { key ->
                             val isSelected = iconKey == key
-                            val currentPrimaryColor = SkillCategories.parseColor(colorHex)
-                            Surface(
+                            Box(
                                 modifier = Modifier
                                     .size(38.dp)
+                                    .appleSpringClick(onClick = { iconKey = key })
                                     .clip(CircleShape)
-                                    .clickable { iconKey = key },
-                                shape = CircleShape,
-                                color = if (isSelected) currentPrimaryColor else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Icon(
-                                        imageVector = SkillCategories.getIcon(key),
-                                        contentDescription = key,
-                                        tint = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        modifier = Modifier.size(20.dp)
+                                    .background(
+                                        if (isSelected) AppleRed else Color(0x33282A36)
                                     )
-                                }
+                                    .border(
+                                        1.dp,
+                                        if (isSelected) Color(0x60FFFFFF) else Color(0x20FFFFFF),
+                                        CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = SkillCategories.getIcon(key),
+                                    contentDescription = key,
+                                    tint = if (isSelected) AppleGrayWhite else AppleGray300,
+                                    modifier = Modifier.size(19.dp)
+                                )
                             }
                         }
                     }
 
                     // Starting Milestones (only shown when creating new skill)
                     if (!isEditing) {
-                        Spacer(modifier = Modifier.height(18.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Starting Milestones (Optional)",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = AppleGrayWhite
+                            )
                         )
                         Spacer(modifier = Modifier.height(6.dp))
 
@@ -404,27 +496,39 @@ fun AddEditSkillDialog(
                             OutlinedTextField(
                                 value = newMilestoneInput,
                                 onValueChange = { newMilestoneInput = it },
-                                placeholder = { Text("e.g. Master fingerpicking pattern") },
+                                placeholder = { Text("e.g. Master fingerpicking pattern", color = AppleGray500) },
                                 singleLine = true,
                                 modifier = Modifier
                                     .weight(1f)
                                     .testTag("new_milestone_input"),
-                                shape = RoundedCornerShape(12.dp)
+                                shape = RoundedCornerShape(14.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedContainerColor = Color(0x441A1B24),
+                                    unfocusedContainerColor = Color(0x3316171F),
+                                    focusedTextColor = AppleGrayWhite,
+                                    unfocusedTextColor = AppleGrayWhite,
+                                    focusedBorderColor = AppleRed.copy(alpha = 0.6f),
+                                    unfocusedBorderColor = Color(0x22FFFFFF),
+                                    cursorColor = AppleRed
+                                )
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            IconButton(
-                                onClick = {
-                                    if (newMilestoneInput.isNotBlank()) {
-                                        milestones.add(newMilestoneInput.trim())
-                                        newMilestoneInput = ""
-                                    }
-                                },
+                            Box(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .testTag("add_milestone_btn")
+                                    .size(46.dp)
+                                    .appleSpringClick(onClick = {
+                                        if (newMilestoneInput.isNotBlank()) {
+                                            milestones.add(newMilestoneInput.trim())
+                                            newMilestoneInput = ""
+                                        }
+                                    })
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .background(AppleRed)
+                                    .border(1.dp, Color(0x40FFFFFF), RoundedCornerShape(14.dp))
+                                    .testTag("add_milestone_btn"),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                                Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = AppleGrayWhite)
                             }
                         }
 
@@ -439,7 +543,7 @@ fun AddEditSkillDialog(
                                 ) {
                                     Text(
                                         text = "${index + 1}. $mTitle",
-                                        style = MaterialTheme.typography.bodySmall,
+                                        style = MaterialTheme.typography.bodySmall.copy(color = AppleGray200),
                                         modifier = Modifier.weight(1f)
                                     )
                                     IconButton(
@@ -449,7 +553,7 @@ fun AddEditSkillDialog(
                                         Icon(
                                             imageVector = Icons.Default.Close,
                                             contentDescription = "Remove",
-                                            tint = MaterialTheme.colorScheme.error,
+                                            tint = AppleRed,
                                             modifier = Modifier.size(16.dp)
                                         )
                                     }
@@ -464,34 +568,49 @@ fun AddEditSkillDialog(
                 // Action Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancel")
+                        Text("Cancel", color = AppleGray300)
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = {
-                            if (name.isNotBlank()) {
-                                onSave(
-                                    name,
-                                    category,
-                                    description,
-                                    targetHours,
-                                    colorHex,
-                                    iconKey,
-                                    milestones.toList()
-                                )
-                            }
-                        },
-                        enabled = name.isNotBlank(),
-                        modifier = Modifier.testTag("save_skill_button"),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = SkillCategories.parseColor(colorHex)
-                        )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .appleSpringClick(
+                                enabled = name.isNotBlank(),
+                                onClick = {
+                                    if (name.isNotBlank()) {
+                                        onSave(
+                                            name,
+                                            category,
+                                            description,
+                                            targetHours,
+                                            colorHex,
+                                            iconKey,
+                                            milestones.toList()
+                                        )
+                                    }
+                                }
+                            )
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(
+                                if (name.isNotBlank()) AppleRed else Color(0x33353844)
+                            )
+                            .border(
+                                1.dp,
+                                if (name.isNotBlank()) Color(0x50FFFFFF) else Color(0x18FFFFFF),
+                                RoundedCornerShape(14.dp)
+                            )
+                            .padding(horizontal = 20.dp, vertical = 11.dp)
+                            .testTag("save_skill_button")
                     ) {
-                        Text(if (isEditing) "Save Changes" else "Create Skill")
+                        Text(
+                            text = if (isEditing) "Save Changes" else "Create Skill",
+                            fontWeight = FontWeight.Bold,
+                            color = if (name.isNotBlank()) AppleGrayWhite else AppleGray500,
+                            fontSize = 13.5.sp
+                        )
                     }
                 }
             }

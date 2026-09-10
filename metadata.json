@@ -1,6 +1,6 @@
 {
   "name": "Skills",
-  "description": "Personal skill tracker and mastery manager to build competencies, log practice hours, and conquer milestones.",
+  "description": "Minimalist liquid glass skill tracker crafted with Apple spring animations and a high-contrast Red, Black, and Gray palette.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

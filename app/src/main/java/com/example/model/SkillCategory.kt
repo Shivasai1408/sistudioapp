@@ -35,26 +35,26 @@ object SkillCategories {
     )
 
     val DEFINITIONS = listOf(
-        CategoryDef("Tech & Code", "code", "#4F46E5"),
-        CategoryDef("Creative & Arts", "brush", "#EC4899"),
-        CategoryDef("Languages", "translate", "#0EA5E9"),
-        CategoryDef("Music & Audio", "music", "#8B5CF6"),
-        CategoryDef("Fitness & Body", "fitness", "#10B981"),
-        CategoryDef("Mind & Lifestyle", "mind", "#F59E0B"),
-        CategoryDef("Career & Business", "career", "#6366F1")
+        CategoryDef("Tech & Code", "code", "#FF2D55"),
+        CategoryDef("Creative & Arts", "brush", "#FF375F"),
+        CategoryDef("Languages", "translate", "#D0D3DE"),
+        CategoryDef("Music & Audio", "music", "#BA1738"),
+        CategoryDef("Fitness & Body", "fitness", "#FF453A"),
+        CategoryDef("Mind & Lifestyle", "mind", "#A6ABB8"),
+        CategoryDef("Career & Business", "career", "#787C8C")
     )
 
     val PRESET_COLORS = listOf(
-        "#4F46E5", // Indigo
-        "#8B5CF6", // Violet
-        "#EC4899", // Pink
-        "#F43F5E", // Rose
-        "#F59E0B", // Amber
-        "#10B981", // Emerald
-        "#0EA5E9", // Sky
-        "#06B6D4", // Cyan
-        "#3B82F6", // Blue
-        "#84CC16"  // Lime
+        "#FF2D55", // Apple Red
+        "#FF375F", // Vibrant Crimson
+        "#E53935", // Carmine Red
+        "#BA1738", // Deep Ruby
+        "#FF453A", // Apple Flame
+        "#242630", // Frosted Dark
+        "#434654", // Graphite Slate
+        "#787C8C", // Cool Gray
+        "#B0B5C4", // Silver Mist
+        "#14151B"  // Obsidian
     )
 
     fun getIcon(iconKey: String): ImageVector {
@@ -74,7 +74,7 @@ object SkillCategories {
         }
     }
 
-    fun parseColor(hex: String, fallback: Color = Color(0xFF4F46E5)): Color {
+    fun parseColor(hex: String, fallback: Color = Color(0xFFFF2D55)): Color {
         return try {
             val cleanHex = hex.removePrefix("#")
             val colorLong = if (cleanHex.length == 6) {
@@ -106,7 +106,7 @@ object SkillTemplates {
             category = "Tech & Code",
             description = "Modern declarative Android UI framework and reactive Kotlin flows.",
             targetHours = 60,
-            colorHex = "#4F46E5",
+            colorHex = "#FF2D55",
             iconKey = "code",
             defaultMilestones = listOf(
                 "Master State & Recomposition primitives",
@@ -121,7 +121,7 @@ object SkillTemplates {
             category = "Music & Audio",
             description = "Fingerstyle techniques, rhythm strumming, and chord progressions.",
             targetHours = 50,
-            colorHex = "#8B5CF6",
+            colorHex = "#BA1738",
             iconKey = "music",
             defaultMilestones = listOf(
                 "Learn 8 fundamental open chords (C, G, D, Em, Am, E, A, Dm)",
@@ -136,7 +136,7 @@ object SkillTemplates {
             category = "Languages",
             description = "Daily conversational fluency, core vocabulary, and natural dialogue.",
             targetHours = 80,
-            colorHex = "#0EA5E9",
+            colorHex = "#D0D3DE",
             iconKey = "translate",
             defaultMilestones = listOf(
                 "Master alphabet, vowels & phonetic pronunciation",
@@ -151,7 +151,7 @@ object SkillTemplates {
             category = "Creative & Arts",
             description = "Character design, dynamic lighting, color harmony, and brushwork.",
             targetHours = 50,
-            colorHex = "#EC4899",
+            colorHex = "#FF375F",
             iconKey = "brush",
             defaultMilestones = listOf(
                 "Practice daily 30-second gesture drawings",
@@ -166,7 +166,7 @@ object SkillTemplates {
             category = "Mind & Lifestyle",
             description = "Tactical vision, opening repertoires, and endgame calculation.",
             targetHours = 40,
-            colorHex = "#F59E0B",
+            colorHex = "#8E93A4",
             iconKey = "mind",
             defaultMilestones = listOf(
                 "Solve 200 tactical puzzles (forks, pins, skewers)",
